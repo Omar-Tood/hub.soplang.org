@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+.prose {
+  max-width: none !important;
+}
+
+.prose pre {
+  @apply bg-gray-900 text-gray-100 dark:bg-gray-800;
+}
+
+.prose code {
+  @apply text-gray-800 dark:text-gray-200 px-1 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800;
+}
+
+.prose pre code {
+  @apply text-gray-100 p-0 bg-transparent;
+}
+
+.prose img {
+  @apply rounded-lg;
+}
+
+.prose a {
+  @apply text-blue-600 dark:text-blue-400 no-underline hover:underline;
+}
+
+.prose h2, .prose h3, .prose h4 {
+  @apply scroll-mt-24;
+} 
