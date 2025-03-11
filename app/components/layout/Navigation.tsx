@@ -120,7 +120,7 @@ export function Navigation() {
                                 'block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200'
                               )}
                             >
-                              Counti out
+                              Continue out
                             </button>
                           )}
                         </Menu.Item>
@@ -132,7 +132,7 @@ export function Navigation() {
                     onClick={() => signIn('github')}
                     className="ml-3 inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                   >
-                    Counti with you github
+                    Continue with you github
                   </button>
                 )}
               </div>
@@ -204,7 +204,7 @@ export function Navigation() {
                       onClick={() => signOut()}
                       className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                     >
-                      Counti out
+                      Continue out
                     </Disclosure.Button>
                   </div>
                 </>
@@ -215,7 +215,7 @@ export function Navigation() {
                     onClick={() => signIn('github')}
                     className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                   >
-                    Counti with you github
+                    Continue with you github
                   </Disclosure.Button>
                 </div>
               )}

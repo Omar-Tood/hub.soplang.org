@@ -2,8 +2,8 @@ import { getProviders } from 'next-auth/react'
 import { CountiWithGithubForm } from '@/app/components/auth/SignInForm'
 
 export const metadata = {
-  title: 'Counti with you github | Soplang Hub',
-  description: 'Counti with you github to Soplang Hub',
+  title: 'Continue with you github | Soplang Hub',
+  description: 'Continue with you github to Soplang Hub',
 }
 
 export default async function SignInPage() {
@@ -14,7 +14,7 @@ export default async function SignInPage() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h1 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
-            Counti with you github to Soplang Hub
+            Continue with you github to Soplang Hub
           </h1>
         </div>
 

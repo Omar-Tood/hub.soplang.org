@@ -32,7 +32,7 @@ export function CountiWithGithubForm({ providers }: CountiWithGithubFormProps) {
               />
             </svg>
             <span className="text-sm font-semibold leading-6">
-              Counti with you github
+              Continue with you github
             </span>
           </button>
         </div>
