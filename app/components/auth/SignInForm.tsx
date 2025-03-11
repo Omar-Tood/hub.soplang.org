@@ -2,11 +2,11 @@
 
 import { signIn } from 'next-auth/react'
 
-type SignInFormProps = {
+type CountiWithGithubFormProps = {
   providers: Record<string, any> | null
 }
 
-export function SignInForm({ providers }: SignInFormProps) {
+export function CountiWithGithubForm({ providers }: CountiWithGithubFormProps) {
   if (!providers) {
     return null
   }
@@ -32,7 +32,7 @@ export function SignInForm({ providers }: SignInFormProps) {
               />
             </svg>
             <span className="text-sm font-semibold leading-6">
-              Continue with {provider.name}
+              Counti with you github
             </span>
           </button>
         </div>
