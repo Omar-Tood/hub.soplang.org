@@ -7,46 +7,12 @@ import { MostDownloaded } from '@/app/components/packages/MostDownloaded'
 import { JustUpdated } from '@/app/components/packages/JustUpdated'
 import { ArrowDownTrayIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import { Hero } from '@/app/components/home/Hero'
 
-export default async function Home() {
+export default function HomePage() {
   return (
     <main>
-      {/* Hero Section */}
-      <div className="w-full bg-gray-900 dark:bg-black">
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              The Soplang Hub
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              The official package registry for Soplang
-            </p>
-            <div className="mt-10">
-              <PackageSearch />
-            </div>
-            <div className="mt-10 flex items-center justify-center gap-6">
-              <Link
-                href="/packages"
-                className="rounded-lg bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20"
-              >
-                <div className="flex items-center gap-2">
-                  <ArrowDownTrayIcon className="h-5 w-5" />
-                  Install Packages
-                </div>
-              </Link>
-              <Link
-                href="/docs"
-                className="rounded-lg bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20"
-              >
-                <div className="flex items-center gap-2">
-                  <BookOpenIcon className="h-5 w-5" />
-                  Documentation
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Hero />
 
       {/* Stats Section */}
       <Stats />
