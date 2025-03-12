@@ -6,6 +6,7 @@ import {
   StarIcon,
   ShieldCheckIcon,
   TagIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline'
 
 interface Package {
@@ -16,6 +17,7 @@ interface Package {
   downloads: number
   createdAt: Date
   updatedAt: Date
+  license: string
   author: {
     name: string
     image?: string
@@ -85,6 +87,11 @@ export function PackageList({ packages, pagination }: PackageListProps) {
                 <div className="flex items-center">
                   <ClockIcon className="mr-1.5 h-5 w-5 flex-shrink-0" />
                   <span>Updated {formatDistanceToNow(pkg.updatedAt, { addSuffix: true })}</span>
+                </div>
+
+                <div className="flex items-center">
+                  <DocumentTextIcon className="mr-1.5 h-5 w-5 flex-shrink-0" />
+                  <span>{pkg.license || 'MIT'}</span>
                 </div>
 
                 {pkg.stars !== undefined && (

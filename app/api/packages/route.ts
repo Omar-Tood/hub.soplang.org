@@ -32,6 +32,24 @@ export async function GET(request: NextRequest) {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        description: true,
+        keywords: true,
+        repository: true,
+        license: true,
+        downloads: true,
+        createdAt: true,
+        updatedAt: true,
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     }),
     prisma.package.count({ where }),
   ])
@@ -76,6 +94,7 @@ export async function POST(request: NextRequest) {
       description,
       keywords,
       repository,
+      license: 'MIT', // Default to MIT license
       sha256,
       authorId: session.user.id,
     }

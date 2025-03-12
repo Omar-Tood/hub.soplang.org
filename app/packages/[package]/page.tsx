@@ -4,6 +4,7 @@ import { PackageHeader } from '@/app/components/packages/PackageHeader'
 import { PackageReadme } from '@/app/components/packages/PackageReadme'
 import { PackageDependencies } from '@/app/components/packages/PackageDependencies'
 import { PackageVersions } from '@/app/components/packages/PackageVersions'
+import { PackageLicense } from '@/app/components/packages/PackageLicense'
 
 type Props = {
   params: {
@@ -15,6 +16,26 @@ async function getPackage(name: string) {
   const pkg = await prisma.package.findUnique({
     where: { name },
     include: {
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+      dependencies: true,
+    },
+    select: {
+      id: true,
+      name: true,
+      version: true,
+      description: true,
+      keywords: true,
+      repository: true,
+      license: true,
+      readme: true,
+      downloads: true,
+      createdAt: true,
+      updatedAt: true,
       author: {
         select: {
           name: true,
@@ -57,6 +78,7 @@ export default async function PackagePage({ params }: Props) {
           <div className="space-y-8">
             <PackageVersions packageName={pkg.name} currentVersion={pkg.version} />
             <PackageDependencies dependencies={pkg.dependencies} />
+            <PackageLicense license={pkg.license || 'MIT'} />
           </div>
         </div>
       </div>
