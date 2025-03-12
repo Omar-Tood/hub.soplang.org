@@ -9,6 +9,11 @@ export const authOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
+      authorization: {
+        params: {
+          scope: 'read:user user:email repo read:org',
+        },
+      },
     }),
   ],
   callbacks: {
@@ -18,6 +23,19 @@ export const authOptions = {
         session.user.role = user.role
       }
       return session
+    },
+    async signIn({ user, account, profile }: any) {
+      if (account?.provider === 'github') {
+        const githubUser = profile as any
+        user.username = githubUser.login
+        user.githubId = githubUser.id
+        user.avatarUrl = githubUser.avatar_url
+        user.bio = githubUser.bio
+        user.company = githubUser.company
+        user.location = githubUser.location
+        user.website = githubUser.blog
+      }
+      return true
     },
   },
   pages: {
