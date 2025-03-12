@@ -3,19 +3,23 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import GithubProvider from 'next-auth/providers/github'
 import { prisma } from '@/app/lib/prisma'
 
-export const authOptions = {
+const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+      clientId: process.env.GITHUB_ID || '',
+      clientSecret: process.env.GITHUB_SECRET || '',
       authorization: {
         params: {
-          scope: 'read:user user:email repo read:org',
+          scope: 'read:user user:email',
         },
       },
     }),
   ],
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
+  },
   callbacks: {
     async session({ session, user }: any) {
       if (session?.user) {
@@ -38,11 +42,6 @@ export const authOptions = {
       return true
     },
   },
-  pages: {
-    signIn: '/auth/signin',
-  },
-}
-
-const handler = NextAuth(authOptions)
+})
 
 export { handler as GET, handler as POST } 
