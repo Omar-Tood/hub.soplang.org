@@ -54,17 +54,36 @@ const authOptions: AuthOptions = {
       return session
     },
     async signIn({ user, account, profile }: any) {
-      if (account?.provider === 'github') {
-        const githubUser = profile as any
-        user.username = githubUser.login
-        user.githubId = githubUser.id
-        user.avatarUrl = githubUser.avatar_url
-        user.bio = githubUser.bio
-        user.company = githubUser.company
-        user.location = githubUser.location
-        user.website = githubUser.blog
+      try {
+        if (account?.provider === 'github') {
+          const githubUser = profile as any
+          user.username = githubUser.login
+          user.githubId = githubUser.id
+          user.avatarUrl = githubUser.avatar_url
+          user.bio = githubUser.bio
+          user.company = githubUser.company
+          user.location = githubUser.location
+          user.website = githubUser.blog
+        }
+        return true
+      } catch (error) {
+        console.error('SignIn error:', error)
+        return false
       }
-      return true
+    },
+  },
+  debug: process.env.NODE_ENV === 'development',
+  logger: {
+    error(code, metadata) {
+      console.error('NextAuth error:', { code, metadata })
+    },
+    warn(code) {
+      console.warn('NextAuth warning:', code)
+    },
+    debug(code, metadata) {
+      if (process.env.NODE_ENV === 'development') {
+        console.debug('NextAuth debug:', { code, metadata })
+      }
     },
   },
 }
