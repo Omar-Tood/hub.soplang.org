@@ -9,6 +9,8 @@ import { ArrowDownTrayIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Hero } from '@/app/components/Hero'
 
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   return (
     <main>

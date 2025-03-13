@@ -1,6 +1,8 @@
 import { PackageList } from '@/app/components/packages/PackageList'
 import { PackageFilters } from '@/app/components/packages/PackageFilters'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Browse All Packages | Soplang Hub',
   description: 'Browse all packages available on Soplang Hub',

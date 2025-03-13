@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import authOptions from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/app/lib/prisma'
 import { PackageList } from '@/app/components/packages/PackageList'
 import { ApiKeys } from '@/app/components/profile/ApiKeys'
