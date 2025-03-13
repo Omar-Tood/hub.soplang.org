@@ -3,21 +3,34 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/app/lib/prisma'
 import { createHash } from 'crypto'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const query = searchParams.get('q')
-  const page = Number(searchParams.get('page')) || 1
+  const page = parseInt(searchParams.get('page') || '1')
   const perPage = 10
 
-  const where = query
-    ? {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-        ],
-      }
-    : {}
+  let where: Prisma.PackageWhereInput = {}
+
+  if (query) {
+    where = {
+      OR: [
+        {
+          name: {
+            contains: query,
+            mode: 'insensitive' as Prisma.QueryMode,
+          },
+        },
+        {
+          description: {
+            contains: query,
+            mode: 'insensitive' as Prisma.QueryMode,
+          },
+        },
+      ],
+    }
+  }
 
   const [packages, total] = await Promise.all([
     prisma.package.findMany({
@@ -25,13 +38,6 @@ export async function GET(request: NextRequest) {
       orderBy: { downloads: 'desc' },
       skip: (page - 1) * perPage,
       take: perPage,
-      include: {
-        author: {
-          select: {
-            name: true,
-          },
-        },
-      },
       select: {
         id: true,
         name: true,
@@ -56,11 +62,10 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     packages,
-    pagination: {
-      total,
-      pages: Math.ceil(total / perPage),
-      current: page,
-    },
+    total,
+    page,
+    perPage,
+    totalPages: Math.ceil(total / perPage),
   })
 }
 

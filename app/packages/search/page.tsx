@@ -1,6 +1,7 @@
 import { PackageList } from '@/app/components/packages/PackageList'
 import { PackageFilters } from '@/app/components/packages/PackageFilters'
 import { prisma } from '@/app/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 type SearchParams = {
   q?: string
@@ -15,26 +16,29 @@ export function generateMetadata({ searchParams }: { searchParams: SearchParams 
 }
 
 async function searchPackages(searchParams: SearchParams) {
-  const query = searchParams.q
-  const page = Number(searchParams.page) || 1
+  const query = searchParams.q || ''
+  const page = parseInt(searchParams.page || '1')
   const perPage = 10
 
-  if (!query) {
-    return {
-      packages: [],
-      pagination: {
-        total: 0,
-        pages: 0,
-        current: page,
-      },
-    }
-  }
-
-  const where = {
+  const where: Prisma.PackageWhereInput = {
     OR: [
-      { name: { contains: query, mode: 'insensitive' } },
-      { description: { contains: query, mode: 'insensitive' } },
-      { keywords: { has: query } },
+      {
+        name: {
+          contains: query,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      },
+      {
+        description: {
+          contains: query,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      },
+      {
+        keywords: {
+          hasSome: [query],
+        },
+      },
     ],
   }
 
@@ -47,10 +51,21 @@ async function searchPackages(searchParams: SearchParams) {
       ],
       skip: (page - 1) * perPage,
       take: perPage,
-      include: {
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        description: true,
+        keywords: true,
+        repository: true,
+        license: true,
+        downloads: true,
+        createdAt: true,
+        updatedAt: true,
         author: {
           select: {
             name: true,
+            image: true,
           },
         },
       },
@@ -84,7 +99,7 @@ export default async function SearchPage({
               Search Results
             </h1>
             <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">
-              {pagination.total} results for "{searchParams.q}"
+              {pagination.total} packages found for "{searchParams.q}"
             </p>
           </div>
         </div>

@@ -1,33 +1,32 @@
 import { prisma } from '@/app/lib/prisma'
 import { PackageCreateInput, PackageSearchResult } from '../models/Package'
+import { Prisma } from '@prisma/client'
+
+export interface SearchPackagesParams {
+  query?: string
+  skip?: number
+  limit?: number
+}
 
 export async function getAllPackages(page = 1, limit = 10, sort = 'downloads') {
   const skip = (page - 1) * limit
-  const orderBy: any = {}
-  
-  switch (sort) {
-    case 'downloads':
-      orderBy.downloads = 'desc'
-      break
-    case 'newest':
-      orderBy.createdAt = 'desc'
-      break
-    case 'updated':
-      orderBy.updatedAt = 'desc'
-      break
-    case 'name':
-      orderBy.name = 'asc'
-      break
-    default:
-      orderBy.downloads = 'desc'
-  }
 
   const [packages, total] = await Promise.all([
     prisma.package.findMany({
       skip,
       take: limit,
-      orderBy,
-      include: {
+      orderBy: { [sort]: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        description: true,
+        keywords: true,
+        repository: true,
+        license: true,
+        downloads: true,
+        createdAt: true,
+        updatedAt: true,
         author: {
           select: {
             name: true,
@@ -77,23 +76,30 @@ export async function getPackageVersions(packageName: string) {
   })
 }
 
-export async function searchPackages(query: string, page = 1, limit = 10): Promise<{
-  packages: PackageSearchResult[]
-  pagination: {
-    total: number
-    pages: number
-    current: number
-  }
-}> {
-  const skip = (page - 1) * limit
-
-  const where = {
-    OR: [
-      { name: { contains: query, mode: 'insensitive' } },
-      { description: { contains: query, mode: 'insensitive' } },
-      { keywords: { has: query } },
-    ],
-  }
+export async function searchPackages({ query, skip = 0, limit = 10 }: SearchPackagesParams) {
+  const where: Prisma.PackageWhereInput = query
+    ? {
+        OR: [
+          {
+            name: {
+              contains: query,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          {
+            description: {
+              contains: query,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          {
+            keywords: {
+              hasSome: [query],
+            },
+          },
+        ],
+      }
+    : {}
 
   const [packages, total] = await Promise.all([
     prisma.package.findMany({
@@ -101,7 +107,17 @@ export async function searchPackages(query: string, page = 1, limit = 10): Promi
       skip,
       take: limit,
       orderBy: { downloads: 'desc' },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        description: true,
+        keywords: true,
+        repository: true,
+        license: true,
+        downloads: true,
+        createdAt: true,
+        updatedAt: true,
         author: {
           select: {
             name: true,
@@ -113,31 +129,61 @@ export async function searchPackages(query: string, page = 1, limit = 10): Promi
     prisma.package.count({ where }),
   ])
 
-  const results = packages.map((pkg) => ({
-    id: pkg.id,
-    name: pkg.name,
-    version: pkg.version,
-    description: pkg.description,
-    downloads: pkg.downloads,
-    authorName: pkg.author.name,
-    authorImage: pkg.author.image,
-    createdAt: pkg.createdAt,
-    updatedAt: pkg.updatedAt,
-  }))
-
   return {
-    packages: results,
+    packages,
     pagination: {
       total,
       pages: Math.ceil(total / limit),
-      current: page,
+      current: Math.floor(skip / limit) + 1,
     },
   }
+}
+
+export async function getPackageById(id: string) {
+  return prisma.package.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      version: true,
+      description: true,
+      keywords: true,
+      repository: true,
+      license: true,
+      downloads: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  })
 }
 
 export async function createPackage(data: PackageCreateInput) {
   return prisma.package.create({
     data,
+    select: {
+      id: true,
+      name: true,
+      version: true,
+      description: true,
+      keywords: true,
+      repository: true,
+      license: true,
+      downloads: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
   })
 }
 
@@ -145,6 +191,24 @@ export async function updatePackage(id: string, data: Partial<PackageCreateInput
   return prisma.package.update({
     where: { id },
     data,
+    select: {
+      id: true,
+      name: true,
+      version: true,
+      description: true,
+      keywords: true,
+      repository: true,
+      license: true,
+      downloads: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
   })
 }
 

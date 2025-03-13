@@ -1,21 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const query = searchParams.get('q')
-  const page = Number(searchParams.get('page')) || 1
+  const query = searchParams.get('q') || ''
+  const page = parseInt(searchParams.get('page') || '1')
   const perPage = 10
 
-  if (!query) {
-    return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 })
-  }
-
-  const where = {
+  const where: Prisma.PackageWhereInput = {
     OR: [
-      { name: { contains: query, mode: 'insensitive' } },
-      { description: { contains: query, mode: 'insensitive' } },
-      { keywords: { has: query } },
+      {
+        name: {
+          contains: query,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      },
+      {
+        description: {
+          contains: query,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      },
+      {
+        keywords: {
+          hasSome: [query],
+        },
+      },
     ],
   }
 
@@ -28,10 +39,21 @@ export async function GET(request: NextRequest) {
       ],
       skip: (page - 1) * perPage,
       take: perPage,
-      include: {
+      select: {
+        id: true,
+        name: true,
+        version: true,
+        description: true,
+        keywords: true,
+        repository: true,
+        license: true,
+        downloads: true,
+        createdAt: true,
+        updatedAt: true,
         author: {
           select: {
             name: true,
+            image: true,
           },
         },
       },
@@ -41,10 +63,9 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     packages,
-    pagination: {
-      total,
-      pages: Math.ceil(total / perPage),
-      current: page,
-    },
+    total,
+    page,
+    perPage,
+    totalPages: Math.ceil(total / perPage),
   })
 } 

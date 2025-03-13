@@ -2,8 +2,33 @@ import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import GithubProvider from 'next-auth/providers/github'
 import { prisma } from '@/app/lib/prisma'
+import { AuthOptions } from 'next-auth'
 
-const handler = NextAuth({
+// Define custom session and user types
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+      role?: string
+    }
+  }
+  interface User {
+    id: string
+    role?: string
+    username?: string
+    githubId?: string
+    avatarUrl?: string
+    bio?: string
+    company?: string
+    location?: string
+    website?: string
+  }
+}
+
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -42,6 +67,8 @@ const handler = NextAuth({
       return true
     },
   },
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST } 

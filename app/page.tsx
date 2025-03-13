@@ -7,7 +7,7 @@ import { MostDownloaded } from '@/app/components/packages/MostDownloaded'
 import { JustUpdated } from '@/app/components/packages/JustUpdated'
 import { ArrowDownTrayIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { Hero } from '@/app/components/home/Hero'
+import { Hero } from '@/app/components/Hero'
 
 export default function HomePage() {
   return (

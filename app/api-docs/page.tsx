@@ -1,4 +1,4 @@
-import { CodeBlock } from '@/app/components/docs/CodeBlock'
+import { CodeBlock } from '@/app/components/CodeBlock'
 
 export const metadata = {
   title: 'API Documentation | Soplang Hub',

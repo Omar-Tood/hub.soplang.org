@@ -13,14 +13,14 @@ interface Package {
   id: string
   name: string
   version: string
-  description: string
+  description: string | null
   downloads: number
   createdAt: Date
   updatedAt: Date
-  license: string
+  license: string | null
   author: {
-    name: string
-    image?: string
+    name: string | null
+    image?: string | null
   }
   stars?: number
   isVerified?: boolean
